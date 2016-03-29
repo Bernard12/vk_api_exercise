@@ -21,21 +21,22 @@ VK API, лайки и sqlite.
 import vk #pip install vk
 
 def get_most_liked_url(user_profile_url):
-	""" 2. Авторизуйте своё приложение """
 
-	session = vk.AuthSession(app_id=app_id, scope="offline,wall")
-	api = vk.API(self.session)
 
-	""" 3. Получите из ссылки пользователя его id или domain, необходимые, чтобы найти его
+    session = vk.AuthSession(app_id='wasd12', scope="offline,wall")
+
+    api = vk.API(session)
+
+    """ 3. Получите из ссылки пользователя его id или domain, необходимые, чтобы найти его
 			Документация по объекту пользователя поможет вам решить, что вам нужно (читайте: проще получить и использовать): id или domain.
 			https://vk.com/dev/fields
 
 	"""
 
-	#user_id = ""	
-	#user_domain = ""
+    #user_id = ""
+    #user_domain = ""
 
-	""" 4. Получите объект пользователя используя метод
+    """ 4. Получите объект пользователя используя метод
 			https://vk.com/dev/users.get
 
 			Здесь необходимо обратиться к api. Для этого мы используем обертку vk.
@@ -48,27 +49,51 @@ def get_most_liked_url(user_profile_url):
 			Самое важное - знать какие и в какой форме подать параметры - это вы найдете в документации api.
  	"""
 
-	user = None
+ #user
+    user=api.users.get(user_id=29027980)
 
-	""" 5. Получите записи со стены пользователя, используя https://vk.com/dev/wall.get 
+    print(user)
+
+
+    """ 5. Получите записи со стены пользователя, используя https://vk.com/dev/wall.get
 
 		Убедитесь, что получаете только записи пользователя user.
-	"""
+    """
 
-	wall_posts = []
+    wall_posts = []
+    dom=user_profile_url.split('/')[-1]
+    for i in api.wall.get(domain=dom,count=100,offset=0):
+        wall_posts.append(i)
 
-	""" 6. Отсортируйте список записей по количеству лайков.
+    #for i in wall_posts:
+    #    print(i)
+
+    mx=-1
+    #for i in wall_posts:
+    #    print(i)
+
+    for i in range(1,len(wall_posts)):
+        if wall_posts[i]['likes']['count']>mx:
+            mx=wall_posts[i]['likes']['count']
+        #print(wall_posts[i]['likes'])
+    print(mx)
+    for i in range(1,len(wall_posts)):
+        if wall_posts[i]['likes']['count']==mx:
+            print('Most liked post is '+str(i)+'-th')
+            print('https://vk.com/'+dom+'?w=wall'+str(wall_posts[i]['to_id'])+'_'+str(wall_posts[i]['id']))
+
+    """ 6. Отсортируйте список записей по количеству лайков.
 
 			Может помочь: https://vk.com/dev/datatypes
 
 		Найдите самый залайканный пост и выведите прямую ссылку на него.
 
-	"""
-	most_liked = None
+    """
+    most_liked = None
 
-	most_liked_url = None
+    most_liked_url = None
 
-	return most_liked_url
+    return most_liked_url
 """ 
 	Уровень 2: 
 
@@ -111,14 +136,14 @@ def get_most_liked_url(user_profile_url):
 """
 
 try:
-	with open('api.key', 'r') as f:
-		app_id = f.readline()
-		secret_key = f.readline()
+    with open('api.key', 'r') as f:
+        app_id = f.readline()
+        secret_key = f.readline()
 except:
-	print("Put app_id and secret_key in file api.key")
+    print("Put app_id and secret_key in file api.key")
 
 """ Введите ссылку на профиль пользователя """
-user_profile_url = ""
+user_profile_url = "https://vk.com/kapralovns"
 
 if __name__ == "__main__":
     print(get_most_liked_url(user_profile_url))
