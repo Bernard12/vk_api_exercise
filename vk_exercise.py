@@ -77,10 +77,13 @@ def get_most_liked_url(user_profile_url):
             mx=wall_posts[i]['likes']['count']
         #print(wall_posts[i]['likes'])
     print(mx)
+    res=''
     for i in range(1,len(wall_posts)):
         if wall_posts[i]['likes']['count']==mx:
-            print('Most liked post is '+str(i)+'-th')
-            print('https://vk.com/'+dom+'?w=wall'+str(wall_posts[i]['to_id'])+'_'+str(wall_posts[i]['id']))
+           # print('Most liked post is '+str(i)+'-th')
+           res+='https://vk.com/'+dom+'?w=wall'+str(wall_posts[i]['to_id'])+'_'+str(wall_posts[i]['id'])
+           res+='\n'
+        #print('https://vk.com/'+dom+'?w=wall'+str(wall_posts[i]['to_id'])+'_'+str(wall_posts[i]['id']))
 
     """ 6. Отсортируйте список записей по количеству лайков.
 
@@ -93,7 +96,7 @@ def get_most_liked_url(user_profile_url):
 
     most_liked_url = None
 
-    return most_liked_url
+    return res
 """ 
 	Уровень 2: 
 
@@ -143,7 +146,7 @@ except:
     print("Put app_id and secret_key in file api.key")
 
 """ Введите ссылку на профиль пользователя """
-user_profile_url = "https://vk.com/kapralovns"
+user_profile_url = "https://vk.com/btseytlin"
 
 if __name__ == "__main__":
     print(get_most_liked_url(user_profile_url))
